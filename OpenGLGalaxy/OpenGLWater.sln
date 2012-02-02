@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{EAF909A5-FA59-4C3D-9431-0FCC20D5BCF9}") = "OpenGLWater", "OpenGLWater\OpenGLWater.icproj", "{C99DDF1D-2403-4C91-83A4-60813D56E003}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Debug|Win32.Build.0 = Debug|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Release|Win32.ActiveCfg = Release|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Release|Win32.Build.0 = Release|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.Build.0 = Release|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.ActiveCfg = Release|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Debug|Win32.Build.0 = Debug|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Debug|Win32.ActiveCfg = Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
