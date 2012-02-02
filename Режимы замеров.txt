@@ -1,7 +1,0 @@
-Профили для замеров скорости вычислений:
-Microsoft Visual Studio C++ Compiler: Debug
-Microsoft Visual Studio C++ Compiler: Release
-Intel Compilers VS Integrated: Debug
-Intel Compilers VS Integrated: Release
-Cuda Computed
-OpenCL Computed
