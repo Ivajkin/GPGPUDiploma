@@ -7,6 +7,7 @@
 #include "ActorManager.h"
 #include "Vector2.h"
 #include "UnitTest.h"
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <glut.h>
 #include "AutoProcessProfiler.h"
@@ -111,75 +112,89 @@ private:
 struct point {
 	point()
 		: mass(random()*1.1+0.1),
-			position(random()*0.5 - random()*0.5, random()*0.5 - random()*0.5, random()*0.5 - random()*0.5),
-			velocity(random()*2 - random()*2, random()*2 - random()*2, random()*2 - random()*2),
+			position(emitter.getX() + random()*random()*0.5 - random()*0.5,
+					emitter.getY() + random()*0.5 - random()*0.5,
+					emitter.getZ() + random()*0.5 - random()*0.5),
+			velocity(random()*2 - random()*2,
+					random()*2 - random()*2,
+					random()*2 - random()*2),
 			acceleration(0,0,0)
 	{
+		if(random() < 0.1305) {
+			emitter = Vector2(
+				random()*9-random()*9,
+				random()*9-random()*9,
+				random()*9-random()*9);
+		}
 	}
 	const double mass;
 	Vector2 position,
 			velocity,
 			acceleration;
+
+	static Vector2 emitter;
 };
+Vector2 point::emitter(0,0,0);
 
 class Star : public Actor {
 public:
 	Star() {
-		color[0] = sqrt(random())*0.6 + 0.4;//random()*random()*0.9 + 0.1;
-		color[1] = random();//1;//random();
+		colorDim[0][0] = sqrt(random())*0.6 + 0.4;//random()*random()*0.9 + 0.1;
+		colorDim[0][1] = random();//1;//random();
 		// r*r + g*g + b*b = 2+random();
 		// b = sqrt(2+random() - g*g - r*r);
-		color[2] = sqrt(2 + random() - color[0]*color[0] - color[1]*color[1]);
-		color[3] = random()*0.6 + 0.4;
+		colorDim[0][2] = sqrt(2 + random() - colorDim[0][0]*colorDim[0][0] - colorDim[0][1]*colorDim[0][1]);
+		colorDim[0][3] = random()*0.6 + 0.4;
 
-		memcpy(colorDim1, color, sizeof(float)*3);
-		colorDim1[3] = color[3]*0.5;
-		memcpy(colorDim2, color, sizeof(float)*3);
-		colorDim2[3] = color[3]*0.35;
-		memcpy(colorDim3, color, sizeof(float)*3);
-		colorDim3[3] = color[3]*0.075;
+		memcpy(colorDim[1], colorDim[0], sizeof(float)*3);
+		colorDim[1][3] = colorDim[0][3]*0.5;
+		memcpy(colorDim[2], colorDim[0], sizeof(float)*3);
+		colorDim[2][3] = colorDim[0][3]*0.35;
+		memcpy(colorDim[3], colorDim[0], sizeof(float)*3);
+		colorDim[3][3] = colorDim[0][3]*0.075;
+		memcpy(colorDim[4], colorDim[0], sizeof(float)*3);
+		colorDim[4][3] = colorDim[0][3]*0.025;
+
+		
+		colorDim[0][0] = 1;
+		colorDim[0][1] = 1;
+		colorDim[0][2] = 1;
+		colorDim[0][3] = 1;
+
+		radius[0] = model.mass*0.02;
+		radius[1] = model.mass*0.016;
+		radius[2] = model.mass*0.041;
+		radius[3] = model.mass*0.141;
+		radius[4] = model.mass*0.241;
 	}
 	void draw() {
-		{
-			glColor4fv(color);
-			const double radius = model.mass*0.02;
-			Vector2 lt(model.position.getX() - radius, model.position.getY() - radius, 0),
-					rb(model.position.getX() + radius, model.position.getY() + radius, 0);
-			glRectf(lt.getX(), lt.getY(), rb.getX(), rb.getY());
-		} {
-			glColor4fv(colorDim1);
-			const double radius = model.mass*0.032;
-			Vector2 lt(model.position.getX() - radius, model.position.getY() - radius, 0),
-					rb(model.position.getX() + radius, model.position.getY() + radius, 0);
-			glRectf(lt.getX(), lt.getY(), rb.getX(), rb.getY());
-		} {
-			glColor4fv(colorDim2);
-			const double radius = model.mass*0.082;
-			Vector2 lt(model.position.getX() - radius, model.position.getY() - radius, 0),
-					rb(model.position.getX() + radius, model.position.getY() + radius, 0);
-			glRectf(lt.getX(), lt.getY(), rb.getX(), rb.getY());
-		} {
-			glColor4fv(colorDim3);
-			const double radius = model.mass*0.282;
-			Vector2 lt(model.position.getX() - radius, model.position.getY() - radius, 0),
-					rb(model.position.getX() + radius, model.position.getY() + radius, 0);
-			glRectf(lt.getX(), lt.getY(), rb.getX(), rb.getY());
+		for(int i = 0; i < 5; ++i) {
+		//for(int i = 4; i > -1; --i) {
+			glColor4fv(colorDim[i]);
+			glBegin(GL_TRIANGLE_FAN);
+			for(float a = 0; a < M_PI*2; a += 0.5) {
+				if(model.position.getZ() < -9) {
+					continue;
+				}
+				const float rad = radius[i] / (10 + model.position.getZ()*0.5)*10;
+				float x = rad*cos(a) + model.position.getX(), y = rad*sin(a) + model.position.getY();
+				glVertex2f(x, y);
+			}
+			glEnd();
 		}
 	}
 	void update() {}
 	point model;
 private:
-	float color[4];
-	float colorDim1[4];
-	float colorDim2[4];
-	float colorDim3[4];
+	float colorDim[5][4];
+	float radius[5];
 };
 
 class Logic {
 public:
 	Logic() {
-		for(int i = 0; i < 1024; ++i) {
-			field.push_back(new Star());
+		for(int i = 0; i < 100; ++i) {
+			createStar();
 		}
 	}
 	~Logic() {
@@ -187,6 +202,9 @@ public:
 			delete field.back();
 			field.pop_back();
 		}
+	}
+	void createStar() {
+		field.push_back(new Star());
 	}
 	void update( /* seconds */ double elapsedTime) {
 		
@@ -202,9 +220,17 @@ public:
 					point& b = (*j)->model;
 					Vector2 range = b.position - a.position;
 					double squaredRangeLength = range.squaredLength();
-					if(squaredRangeLength > 0.001) {
+					// Космическая пыль.
+					a.velocity = a.velocity * pow(0.995, elapsedTime);
+					// Сталкиваются ли объекты.
+					if(squaredRangeLength > 0.005) {
 						// m*M/r^2
-						a.acceleration += range * a.mass * b.mass / (squaredRangeLength*sqrt(squaredRangeLength));
+						a.acceleration += range * a.mass * b.mass / (squaredRangeLength*sqrt(squaredRangeLength)) * 20;
+						// Тёмная энергия для стабилизации сгустков.
+						//a.acceleration -= range * a.mass * b.mass * squaredRangeLength * 0.01;
+					} else {
+						// Неупругий удар (притормаживаем).
+						a.velocity = a.velocity * pow(0.6, elapsedTime);
 					}
 				}
 			}
@@ -263,11 +289,19 @@ namespace gl_callback {
 		glutTimerFunc(1000/60, timer, frame+1);
 	}
 	void keyboard(unsigned char key, int x, int y) {
-		if(13 == key) {
-			switchWindowedMode();
-		} else if(27 == key) {
-			glutDestroyWindow(current_window);
-			exit(0);
+		switch(key) {
+			case 13:
+				switchWindowedMode();
+				break;
+			case 27:
+				glutDestroyWindow(current_window);
+				exit(0);
+				break;
+			case 115:
+				for(int i = 0; i < 100; ++i) {
+					appLogic.createStar();
+				}
+				break;
 		}
 	}
 }

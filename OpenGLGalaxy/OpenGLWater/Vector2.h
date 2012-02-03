@@ -25,6 +25,12 @@ public:
 		z += sec.z;
 		return *this;
 	}
+	Vector2& operator-=(const Vector2& sec) {
+		x -= sec.x;
+		y -= sec.y;
+		z -= sec.z;
+		return *this;
+	}
 	bool operator==(const Vector2& sec) {
 		return abs(x - sec.x) < epsilon && abs(y - sec.y) < epsilon && abs(z - sec.z) < epsilon;
 	}
