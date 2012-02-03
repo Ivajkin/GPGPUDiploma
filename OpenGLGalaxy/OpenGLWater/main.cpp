@@ -193,7 +193,7 @@ private:
 class Logic {
 public:
 	Logic() {
-		for(int i = 0; i < 100; ++i) {
+		for(int i = 0; i < 1024; ++i) {
 			createStar();
 		}
 	}
