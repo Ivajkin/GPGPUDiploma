@@ -1,7 +1,13 @@
 ﻿Профили для замеров скорости вычислений:
 Microsoft Visual Studio C++ Compiler: Debug
 Microsoft Visual Studio C++ Compiler: Release
-Intel Compilers VS Integrated: Debug
-Intel Compilers VS Integrated: Release
+Intel Compiler VS Integrated: Debug
+Intel Compiler VS Integrated: Release
 Cuda Computed
+Cuda Computed: Quadruple Precision
 OpenCL Computed
+OpenCL Computed: Quadruple Precision
+
+Возможно:
+Apple iPad Demo - нужна подписка Apple Developer (порядка 80$)
+Intel Compiler: Quadruple Precision
