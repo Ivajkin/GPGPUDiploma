@@ -1,4 +1,4 @@
-Профили для замеров скорости вычислений:
+п»їРџСЂРѕС„РёР»Рё РґР»СЏ Р·Р°РјРµСЂРѕРІ СЃРєРѕСЂРѕСЃС‚Рё РІС‹С‡РёСЃР»РµРЅРёР№:
 Microsoft Visual Studio C++ Compiler: Debug
 Microsoft Visual Studio C++ Compiler: Release
 Intel Compilers VS Integrated: Debug
