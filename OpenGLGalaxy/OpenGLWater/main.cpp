@@ -87,7 +87,7 @@ private:
 World world;*/
 
 double random() {
-	return rand()%100000 / 100000.0;
+	return pow(rand()%100000 / 100000.0, 1.0/2.87);
 }
 /*
 class Star : public Actor {
@@ -125,10 +125,12 @@ struct point {
 class Star : public Actor {
 public:
 	Star() {
-		color[0] = random()*0.5 + 0.5;
-		color[1] = random()*0.5 + 0.5;
-		color[2] = random()*0.5 + 0.5;
-		color[3] = random()*0.5 + 0.5;
+		color[0] = sqrt(random())*0.6 + 0.4;//random()*random()*0.9 + 0.1;
+		color[1] = random();//1;//random();
+		// r*r + g*g + b*b = 2+random();
+		// b = sqrt(2+random() - g*g - r*r);
+		color[2] = sqrt(2 + random() - color[0]*color[0] - color[1]*color[1]);
+		color[3] = random()*0.6 + 0.4;
 
 		memcpy(colorDim1, color, sizeof(float)*3);
 		colorDim1[3] = color[3]*0.5;
@@ -219,10 +221,16 @@ private:
 	std::vector<Star*> field;
 } appLogic;
 
-const int SCREEN_WIDTH = 1300, SCREEN_HEIGHT = 700;
+const int SCREEN_WIDTH = 1366, SCREEN_HEIGHT = 768;
+
+void switchWindowedMode();
 
 namespace gl_callback {
-	void init() {
+	
+	int current_window;
+	void init(const int current_window) {
+		gl_callback::current_window = current_window;
+
 		glClearColor(0.0,0.0,0.0,1.0);
 		glClearDepth(0.1);
 		glEnable(GL_DEPTH);
@@ -254,29 +262,78 @@ namespace gl_callback {
 		draw();
 		glutTimerFunc(1000/60, timer, frame+1);
 	}
+	void keyboard(unsigned char key, int x, int y) {
+		if(13 == key) {
+			switchWindowedMode();
+		} else if(27 == key) {
+			glutDestroyWindow(current_window);
+			exit(0);
+		}
+	}
+}
+
+void switchWindowedMode() {	
+	static bool isFullscreenModeEnabled = false;
+	if(isFullscreenModeEnabled) {
+		//glutLeaveGameMode();
+		glutReshapeWindow(SCREEN_WIDTH-100, SCREEN_HEIGHT-100);
+		glutPositionWindow(50,50);
+	} else {
+		glutFullScreen();
+		//glutEnterGameMode();
+		//glutDisplayFunc(gl_callback::draw);
+	}
+	isFullscreenModeEnabled = !isFullscreenModeEnabled;
 }
 
 int _tmain(int argc, char* argv[])
 {
 	{
-		int* i = new int(8);
-		srand((int)i);
-		delete i;
+		// random() test
+		int itertion_count = 0,
+			up_itertion_count = 0,
+			down_itertion_count = 0;
+		double value = 0,
+			up_value = 0,
+			down_value = 0;
+		for(int i = 0; i < 1000000; ++i) {
+			++itertion_count;
+			double val = random();
+			value += val;
+			if(val > 0.5) {
+				up_value += val;
+				++up_itertion_count;
+			} else {
+				down_value += val;
+				++down_itertion_count;
+			}
+		}
+		// Must be about 0.5
+		printf("Average: %f\n", (float)(value/itertion_count));
+		printf("Average upper value: %f\n", (float)(up_value/up_itertion_count));
+		printf("Average downward: %f\n", (float)(down_value/down_itertion_count));
+	}
+	{
+		//int* i = new int(8);
+		//srand((int)i);
+		//delete i;
+		srand(clock());
 	}
 	// UNIT TESTS!
 	UnitTest::Run();
-	printf("Ready to go!");
+	printf("Ready to go!\n");
 	// MAIN
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutInitWindowPosition(0,0);
 	glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	glutCreateWindow("N body galaxy");
+	const int current_window = glutCreateWindow("N body galaxy");
 	glutDisplayFunc(gl_callback::draw);
 	glutIdleFunc(gl_callback::idle);
+	glutKeyboardFunc(gl_callback::keyboard);
 	gl_callback::timer(0);
 
-	gl_callback::init();
+	gl_callback::init(current_window);
 
 	glutMainLoop();
 	return 0;
