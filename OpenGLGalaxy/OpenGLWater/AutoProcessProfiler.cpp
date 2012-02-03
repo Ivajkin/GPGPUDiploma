@@ -25,7 +25,7 @@ void AutoProcessProfiler::end_measurement() {
 	const clock_t end_measurement = clock();
 	assert(last_start_measure != -1 && "Видимо порядок измерений не тот");
 	++iteration_count;
-	double elapsed = end_measurement - last_start_measure;
+	const clock_t elapsed = end_measurement - last_start_measure;
 	cpu_time += elapsed;
 
 	last_start_measure = -1;
