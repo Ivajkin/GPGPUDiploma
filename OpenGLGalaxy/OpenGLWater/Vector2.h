@@ -55,3 +55,10 @@ private:
 class Vector2UnitTest : public UnitTest {
 	void run();
 };
+
+
+#define _USE_MATH_DEFINES
+#include <cmath>
+double random() {
+	return pow(rand()%100000 / 100000.0, 1.0/2.87);
+}

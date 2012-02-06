@@ -225,6 +225,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\point.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Star.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UnitTest.h"
 				>
 			</File>
@@ -252,6 +260,14 @@
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\point.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Star.cpp"
 				>
 			</File>
 			<File
