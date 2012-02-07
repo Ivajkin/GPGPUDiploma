@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "_stdafx.h"
 #include "AutoProcessProfiler.h"
 #include <assert.h>
 

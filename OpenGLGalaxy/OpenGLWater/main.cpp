@@ -1,7 +1,7 @@
 // OpenGLWater.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+#include "_stdafx.h"
 #include <exception>
 #include "Actor.h"
 #include "ActorManager.h"

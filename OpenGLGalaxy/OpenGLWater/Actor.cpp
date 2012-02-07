@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "_stdafx.h"
 #include "Actor.h"
 
 Actor::Actor() {

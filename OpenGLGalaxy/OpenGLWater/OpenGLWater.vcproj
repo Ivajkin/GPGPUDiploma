@@ -118,6 +118,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="_StdAfx.h"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -169,11 +170,7 @@
 			Name="Stuff"
 			>
 			<File
-				RelativePath=".\ReadMe.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\_stdafx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -193,7 +190,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\_stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ReadMe.txt"
 				>
 			</File>
 			<File

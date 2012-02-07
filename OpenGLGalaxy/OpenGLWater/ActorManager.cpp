@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "_stdafx.h"
 #include "ActorManager.h"
 #include "Actor.h"
 
