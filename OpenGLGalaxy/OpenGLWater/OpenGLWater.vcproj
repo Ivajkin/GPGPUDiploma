@@ -404,7 +404,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Vector2.h"
+				RelativePath=".\Vector3.h"
 				>
 			</File>
 		</Filter>
@@ -446,7 +446,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Vector2.cpp"
+				RelativePath=".\Vector3.cpp"
 				>
 			</File>
 		</Filter>

@@ -14,6 +14,7 @@ Logic::~Logic() {
 		delete field.back();
 		field.pop_back();
 	}
+	disposeGPGPU();
 }
 
 void Logic::createStar() {
@@ -21,7 +22,26 @@ void Logic::createStar() {
 }
 
 void Logic::update( /* seconds */ double elapsedTime) {
-	
+	// Буфферы для хранения сконвертированных данных.
+	const int count = field.size();
+	double* mass = new double[count];
+	Vector3* position = new Vector3[count];
+	Vector3* velocity = new Vector3[count];
+	Vector3* acceleration = new Vector3[count];
+
+	static AutoProcessProfiler dataConvertingProcess("Data Converting Process");
+	dataConvertingProcess.start_measurement();
+	{
+		for(int i = 0; i < count; ++i) {
+			mass[i] = field[i]->model.mass;
+			position[i] = field[i]->model.position;
+			velocity[i] = field[i]->model.velocity;
+			acceleration[i] = field[i]->model.acceleration;
+		}
+	}
+	dataConvertingProcess.end_measurement();
+
+	//processGPGPU~~
 	static AutoProcessProfiler gravityComputationProcess("Gravity Computation Process");
 
 	// cudaDeviceSynchronize()
@@ -56,9 +76,43 @@ void Logic::update( /* seconds */ double elapsedTime) {
 	}
 	// cudaDeviceSynchronize()
 	gravityComputationProcess.end_measurement();
+
+
+	dataConvertingProcess.start_measurement();
+	{
+		for(int i = 0; i < count; ++i) {
+			field[i]->model.position = position[i];
+			field[i]->model.velocity = velocity[i];
+			field[i]->model.acceleration = acceleration[i];
+		}
+	}
+	dataConvertingProcess.end_measurement();
+	
+	delete [] mass;
+	delete [] position;
+	delete [] velocity;
+	delete [] acceleration;
 }
 
 void Logic::initGPGPU() {
+#ifdef CUDA_GPGPU
+#elif defined OPENCL_GPGPU
+#elif defined CPU_GPGPU
+#else
+	assert(false && "There is no valid processor type defined (CUDA_GPGPU, OPENCL_GPGPU or CPU_GPGPU)");
+#endif
+}
+
+void Logic::processGPGPU(double* mass, Vector3* position, Vector3* velocity, Vector3* acceleration, const int count) {
+#ifdef CUDA_GPGPU
+#elif defined OPENCL_GPGPU
+#elif defined CPU_GPGPU
+#else
+	assert(false && "There is no valid processor type defined (CUDA_GPGPU, OPENCL_GPGPU or CPU_GPGPU)");
+#endif
+}
+
+void Logic::disposeGPGPU() {
 #ifdef CUDA_GPGPU
 #elif defined OPENCL_GPGPU
 #elif defined CPU_GPGPU
