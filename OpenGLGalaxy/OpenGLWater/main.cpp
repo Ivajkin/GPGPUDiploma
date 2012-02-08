@@ -160,17 +160,24 @@ namespace gl_callback {
 	}
 	void keyboard(unsigned char key, int x, int y) {
 		switch(key) {
+			//ENTER
 			case 13:
 				switchWindowedMode();
 				break;
+			//ESC
 			case 27:
 				glutDestroyWindow(current_window);
 				exit(0);
 				break;
+			//S
 			case 115:
 				for(int i = 0; i < 100; ++i) {
 					appLogic.createStar();
 				}
+				break;
+			//SPACE
+			case 32:
+				Star::isPosColoringModeOn = !Star::isPosColoringModeOn;
 				break;
 		}
 	}

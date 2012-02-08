@@ -4,7 +4,7 @@
 
 bool isDark = false;
 
-Star::Star() {
+Star::Star(point* model) : model(model) {
 	//colorDim[0][0] = sqrt(random())*0.6 + 0.4;
 	//colorDim[0][1] = random();
 	// r*r + g*g + b*b = 2+random();
@@ -54,25 +54,31 @@ Star::Star() {
 	colorDim[0][2] = 1;
 	colorDim[0][3] = 1;
 
-	radius[0] = model.mass*0.02;
-	radius[1] = model.mass*0.016;
-	radius[2] = model.mass*0.041;
-	radius[3] = model.mass*0.141;
-	radius[4] = model.mass*0.241;
+	radius[0] = model->mass*0.02;
+	radius[1] = model->mass*0.016;
+	radius[2] = model->mass*0.041;
+	radius[3] = model->mass*0.141;
+	radius[4] = model->mass*0.241;
 }
 void Star::draw() {
 	for(int i = 0; i < 5; ++i) {
 	//for(int i = 4; i > -1; --i) {
-		glColor4fv(colorDim[i]);
+		if(isPosColoringModeOn) {
+			glColor4f(model->position.getX(), model->position.getY(), model->position.getZ(), colorDim[i][3]);
+		} else {
+			glColor4fv(colorDim[i]);
+		}
 		glBegin(GL_TRIANGLE_FAN);
 		for(float a = 0; a < M_PI*2; a += 0.5) {
-			if(model.position.getZ() < -9) {
+			if(model->position.getZ() < -9) {
 				continue;
 			}
-			const float rad = radius[i] / (10 + model.position.getZ()*0.5)*10;
-			float x = rad*cos(a) + model.position.getX(), y = rad*sin(a) + model.position.getY();
+			const float rad = radius[i] / (10 + model->position.getZ()*0.7)*10;
+			float x = rad*cos(a) + model->position.getX(), y = rad*sin(a) + model->position.getY();
 			glVertex2f(x, y);
 		}
 		glEnd();
 	}
 }
+
+bool Star::isPosColoringModeOn = false;

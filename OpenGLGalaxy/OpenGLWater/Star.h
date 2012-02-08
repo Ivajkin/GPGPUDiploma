@@ -4,11 +4,13 @@
 
 class Star : public Actor {
 public:
-	Star();
+	Star(point* model);
 	void draw();
 	void update() {}
-	point model;
+	point* model;
 private:
 	float colorDim[5][4];
 	float radius[5];
+public:
+	static bool isPosColoringModeOn;
 };

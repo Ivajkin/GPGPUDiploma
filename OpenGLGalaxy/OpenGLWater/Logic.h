@@ -8,9 +8,11 @@ public:
 	~Logic();
 	void createStar();
 	void update( /* seconds */ double elapsedTime);
-	void initGPGPU();
-	void processGPGPU(double* mass, Vector3* position, Vector3* velocity, Vector3* acceleration, const int count);
-	void disposeGPGPU();
+	static void initGPGPU();
+	static void processGPGPU(double elapsedTime, point* points, const int point_count);
+	static void disposeGPGPU();
 private:
-	std::vector<Star*> field;
+	std::vector<Star*> starField;
+	static const int MAX_POINT_COUNT = 4096;
+	point* pointField;
 };

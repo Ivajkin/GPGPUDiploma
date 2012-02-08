@@ -4,54 +4,59 @@
 
 Logic::Logic() {
 	initGPGPU();
+	pointField = new point[MAX_POINT_COUNT];
 	for(int i = 0; i < 1024; ++i) {
 		createStar();
 	}
 }
 
 Logic::~Logic() {
-	while(field.size()) {
-		delete field.back();
-		field.pop_back();
+	while(starField.size()) {
+		delete starField.back();
+		starField.pop_back();
 	}
+	delete [] pointField;
 	disposeGPGPU();
 }
 
 void Logic::createStar() {
-	field.push_back(new Star());
+	if(MAX_POINT_COUNT > starField.size()) {
+		starField.push_back(new Star(pointField + (starField.size())));
+	}
 }
 
 void Logic::update( /* seconds */ double elapsedTime) {
-	// Буфферы для хранения сконвертированных данных.
-	const int count = field.size();
-	double* mass = new double[count];
-	Vector3* position = new Vector3[count];
-	Vector3* velocity = new Vector3[count];
-	Vector3* acceleration = new Vector3[count];
-
-	static AutoProcessProfiler dataConvertingProcess("Data Converting Process");
-	dataConvertingProcess.start_measurement();
-	{
-		for(int i = 0; i < count; ++i) {
-			mass[i] = field[i]->model.mass;
-			position[i] = field[i]->model.position;
-			velocity[i] = field[i]->model.velocity;
-			acceleration[i] = field[i]->model.acceleration;
-		}
-	}
-	dataConvertingProcess.end_measurement();
 
 	//processGPGPU~~
 	static AutoProcessProfiler gravityComputationProcess("Gravity Computation Process");
 
 	// cudaDeviceSynchronize()
 	gravityComputationProcess.start_measurement();
-	for(std::vector<Star*>::iterator i = field.begin(); i != field.end(); ++i) {
-		for(std::vector<Star*>::iterator j = field.begin(); j != field.end(); ++j) {
-			point& a = (*i)->model;
+	processGPGPU(elapsedTime, pointField, starField.size());
+	// cudaDeviceSynchronize()
+	gravityComputationProcess.end_measurement();
+}
+
+void Logic::initGPGPU() {
+#ifdef CUDA_GPGPU
+#elif defined OPENCL_GPGPU
+#elif defined CPU_GPGPU
+#else
+	assert(false && "There is no valid processor type defined (CUDA_GPGPU, OPENCL_GPGPU or CPU_GPGPU)");
+#endif
+}
+
+// 
+void Logic::processGPGPU(double elapsedTime, point* points, const int point_count) {
+#ifdef CUDA_GPGPU
+#elif defined OPENCL_GPGPU
+#elif defined CPU_GPGPU
+	for(int i = 0; i < point_count; ++i) {
+		for(int j = 0; j < point_count; ++j) {
+			point& a = points[i];
 			a.acceleration = Vector3::Zero;
 			if(i != j) {
-				point& b = (*j)->model;
+				point& b = points[j];
 				Vector3 range = b.position - a.position;
 				double squaredRangeLength = range.squaredLength();
 				// Космическая пыль.
@@ -69,44 +74,11 @@ void Logic::update( /* seconds */ double elapsedTime) {
 			}
 		}
 	}
-	for(std::vector<Star*>::iterator i = field.begin(); i != field.end(); ++i) {
-		point& a = (*i)->model;
+	for(int i = 0; i < point_count; ++i) {
+		point& a = points[i];
 		a.velocity += a.acceleration * elapsedTime;
 		a.position += a.velocity * elapsedTime;
 	}
-	// cudaDeviceSynchronize()
-	gravityComputationProcess.end_measurement();
-
-
-	dataConvertingProcess.start_measurement();
-	{
-		for(int i = 0; i < count; ++i) {
-			field[i]->model.position = position[i];
-			field[i]->model.velocity = velocity[i];
-			field[i]->model.acceleration = acceleration[i];
-		}
-	}
-	dataConvertingProcess.end_measurement();
-	
-	delete [] mass;
-	delete [] position;
-	delete [] velocity;
-	delete [] acceleration;
-}
-
-void Logic::initGPGPU() {
-#ifdef CUDA_GPGPU
-#elif defined OPENCL_GPGPU
-#elif defined CPU_GPGPU
-#else
-	assert(false && "There is no valid processor type defined (CUDA_GPGPU, OPENCL_GPGPU or CPU_GPGPU)");
-#endif
-}
-
-void Logic::processGPGPU(double* mass, Vector3* position, Vector3* velocity, Vector3* acceleration, const int count) {
-#ifdef CUDA_GPGPU
-#elif defined OPENCL_GPGPU
-#elif defined CPU_GPGPU
 #else
 	assert(false && "There is no valid processor type defined (CUDA_GPGPU, OPENCL_GPGPU or CPU_GPGPU)");
 #endif
