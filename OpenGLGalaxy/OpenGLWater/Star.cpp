@@ -2,13 +2,27 @@
 #include "Star.h"
 #include <glut.h>
 
+bool isDark = false;
+
 Star::Star() {
-	colorDim[0][0] = sqrt(random())*0.6 + 0.4;
-	colorDim[0][1] = random();
+	//colorDim[0][0] = sqrt(random())*0.6 + 0.4;
+	//colorDim[0][1] = random();
 	// r*r + g*g + b*b = 2+random();
 	// b = sqrt(2+random() - g*g - r*r);
-	colorDim[0][2] = sqrt(2 + random() - colorDim[0][0]*colorDim[0][0] - colorDim[0][1]*colorDim[0][1]);
-	{
+	//colorDim[0][2] = sqrt(2 + random() - colorDim[0][0]*colorDim[0][0] - colorDim[0][1]*colorDim[0][1]);
+	if(random() < 0.15) {
+		isDark = !isDark;
+	}
+	if(isDark) {
+		colorDim[0][0] = random()*random()*random()*0.8 + 0.05;
+		colorDim[0][1] = random()*0.6 + 0.25;
+		colorDim[0][2] = random()*random()*0.8 + 0.05;
+	} else {
+		colorDim[0][0] = random()*random()*random()*0.7 + 0.3;
+		colorDim[0][1] = random()*random()*0.55 + 0.45;
+		colorDim[0][2] = random()*random()*random();
+	}
+	/*{
 		bool isRed = ( random() < 0.2 );
 		if(isRed) {
 			colorDim[0][0] = 1;
@@ -22,7 +36,7 @@ Star::Star() {
 				colorDim[0][2] = 1;
 			}
 		}
-	}
+	}*/
 	colorDim[0][3] = random()*0.6 + 0.4;
 
 	memcpy(colorDim[1], colorDim[0], sizeof(float)*3);

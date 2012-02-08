@@ -1,12 +1,13 @@
 #pragma once
-#include "Vector2.h"
+#include "Vector3.h"
 
 struct point {
 	point();
 	const double mass;
-	Vector2 position,
+	Vector3 position,
 			velocity,
 			acceleration;
 private:
-	static Vector2 emitter;
+	static Vector3 emitter;
+	static Vector3 velocity_emitter;
 };

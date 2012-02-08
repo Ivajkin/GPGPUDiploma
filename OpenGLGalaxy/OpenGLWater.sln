@@ -6,17 +6,25 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		OpenCL Debug|Win32 = OpenCL Debug|Win32
+		OpenCL Release|Win32 = OpenCL Release|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Debug|Win32.Build.0 = Debug|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.OpenCL Debug|Win32.ActiveCfg = OpenCL Debug|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.OpenCL Debug|Win32.Build.0 = OpenCL Debug|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.OpenCL Release|Win32.ActiveCfg = OpenCL Release|Win32
+		{C99DDF1D-2403-4C91-83A4-60813D56E003}.OpenCL Release|Win32.Build.0 = OpenCL Release|Win32
 		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Release|Win32.ActiveCfg = Release|Win32
 		{C99DDF1D-2403-4C91-83A4-60813D56E003}.Release|Win32.Build.0 = Release|Win32
-		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.Build.0 = Release|Win32
-		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.ActiveCfg = Release|Win32
-		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Debug|Win32.Build.0 = Debug|Win32
 		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Debug|Win32.Build.0 = Debug|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.OpenCL Debug|Win32.ActiveCfg = OpenCL Debug|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.OpenCL Release|Win32.ActiveCfg = OpenCL Release|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.ActiveCfg = Release|Win32
+		{6E8DC48B-3789-4802-8863-2790E43E0A4C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

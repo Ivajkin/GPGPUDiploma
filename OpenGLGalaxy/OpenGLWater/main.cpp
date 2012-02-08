@@ -5,13 +5,14 @@
 #include <exception>
 #include "Actor.h"
 #include "ActorManager.h"
-#include "Vector2.h"
+#include "Vector3.h"
 #include "UnitTest.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <glut.h>
 #include "AutoProcessProfiler.h"
 #include "Star.h"
+#include "Logic.h"
 /*
 class R2Iterator {
 public:
@@ -105,62 +106,7 @@ private:
 };
 */
 
-class Logic {
-public:
-	Logic() {
-		for(int i = 0; i < 1024; ++i) {
-			createStar();
-		}
-	}
-	~Logic() {
-		while(field.size()) {
-			delete field.back();
-			field.pop_back();
-		}
-	}
-	void createStar() {
-		field.push_back(new Star());
-	}
-	void update( /* seconds */ double elapsedTime) {
-		
-		static AutoProcessProfiler gravityComputationProcess("Gravity Computation Process");
-
-		// cudaDeviceSynchronize()
-		gravityComputationProcess.start_measurement();
-		for(std::vector<Star*>::iterator i = field.begin(); i != field.end(); ++i) {
-			for(std::vector<Star*>::iterator j = field.begin(); j != field.end(); ++j) {
-				point& a = (*i)->model;
-				a.acceleration = Vector2::Zero;
-				if(i != j) {
-					point& b = (*j)->model;
-					Vector2 range = b.position - a.position;
-					double squaredRangeLength = range.squaredLength();
-					// Космическая пыль.
-					a.velocity = a.velocity * pow(0.995, elapsedTime);
-					// Сталкиваются ли объекты.
-					if(squaredRangeLength > 0.005) {
-						// m*M/r^2
-						a.acceleration += range * a.mass * b.mass / (squaredRangeLength*sqrt(squaredRangeLength)) * 20;
-						// Тёмная энергия для стабилизации сгустков.
-						//a.acceleration -= range * a.mass * b.mass * squaredRangeLength * 0.01;
-					} else {
-						// Неупругий удар (притормаживаем).
-						a.velocity = a.velocity * pow(0.6, elapsedTime);
-					}
-				}
-			}
-		}
-		for(std::vector<Star*>::iterator i = field.begin(); i != field.end(); ++i) {
-			point& a = (*i)->model;
-			a.velocity += a.acceleration * elapsedTime;
-			a.position += a.velocity * elapsedTime;
-		}
-		// cudaDeviceSynchronize()
-		gravityComputationProcess.end_measurement();
-	}
-private:
-	std::vector<Star*> field;
-} appLogic;
+Logic appLogic;
 
 const int SCREEN_WIDTH = 1366, SCREEN_HEIGHT = 768;
 
@@ -177,6 +123,15 @@ namespace gl_callback {
 		glEnable(GL_DEPTH);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		/*GLfloat fogColor[4]= {0, 0, 0, 1.0f}; // Цвет тумана
+		glEnable(GL_FOG);
+		glFogi(GL_FOG_MODE, GL_EXP);
+		glFogfv(GL_FOG_COLOR, fogColor);
+		glFogf(GL_FOG_DENSITY, 0.35f);
+		glHint(GL_FOG_HINT, GL_DONT_CARE);
+		glFogf(GL_FOG_START, 0.1f);
+		glFogf(GL_FOG_END, 50.0f);*/
 	}
 	void draw() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
