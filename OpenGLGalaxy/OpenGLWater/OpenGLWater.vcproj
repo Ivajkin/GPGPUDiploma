@@ -450,6 +450,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\Bin\gravity_kernel.cl"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
